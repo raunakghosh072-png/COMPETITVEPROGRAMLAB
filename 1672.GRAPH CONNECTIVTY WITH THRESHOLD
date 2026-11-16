@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<int> parent;
+
+    int find(int i) {
+        if (parent[i] == i)
+            return i;
+        return parent[i] = find(parent[i]);
+    }
+
+    void unite(int i, int j) {
+        int root_i = find(i);
+        int root_j = find(j);
+        if (root_i != root_j) {
+            parent[root_i] = root_j;
+        }
+    }
+
+    vector<bool> areConnected(int n, int threshold, vector<vector<int>>& queries) {
+        parent.resize(n + 1);
+        for (int i = 1; i <= n; ++i) {
+            parent[i] = i;
+        }
+
+        for (int z = threshold + 1; z <= n; ++z) {
+            for (int mult = 2 * z; mult <= n; mult += z) {
+                unite(z, mult);
+            }
+        }
+
+        vector<bool> ans;
+        ans.reserve(queries.size());
+        for (const auto& q : queries) {
+            ans.push_back(find(q[0]) == find(q[1]));
+        }
+
+        return ans;
+    }
+};
