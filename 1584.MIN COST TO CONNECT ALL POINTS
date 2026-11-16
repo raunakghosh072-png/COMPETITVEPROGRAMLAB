@@ -1,0 +1,30 @@
+class Solution(object):
+    def minCostConnectPoints(self, points):
+        import heapq
+        n = len(points)
+        if n <= 1:
+            return 0
+        
+        min_cost = 0
+        visited = [False] * n
+        min_heap = [(0, 0)]
+        edges_connected = 0
+        
+        while edges_connected < n and min_heap:
+            weight, u = heapq.heappop(min_heap)
+            
+            if visited[u]:
+                continue
+                
+            visited[u] = True
+            min_cost += weight
+            edges_connected += 1
+            
+            x1, y1 = points[u]
+            for v in range(n):
+                if not visited[v]:
+                    x2, y2 = points[v]
+                    dist = abs(x1 - x2) + abs(y1 - y2)
+                    heapq.heappush(min_heap, (dist, v))
+                    
+        return min_cost
